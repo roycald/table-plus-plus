@@ -1,0 +1,6 @@
+@import "~ag-grid-community/src/styles/ag-grid.scss";
+@import "~ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin";
+
+.ag-theme-alpine {
+    background-color: blue;
+}

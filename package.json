@@ -1,0 +1,35 @@
+{
+  "name": "h-table",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch"
+  },
+  "repository": "github:grafana/simple-react-panel",
+  "author": "R",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/grafana/simple-react-panel/issues",
+    "email": "plugins@grafana.com"
+  },
+  "devDependencies": {
+    "@grafana/data": "7.0.1",
+    "@grafana/toolkit": "7.0.1",
+    "@grafana/ui": "7.0.1",
+    "emotion": "10.0.27"
+  },
+  "engines": {
+    "node": ">=12 <13"
+  },
+  "dependencies": {
+    "ag-grid-community": "^23.2.1",
+    "ag-grid-enterprise": "^23.2.1",
+    "ag-grid-react": "^23.2.1",
+    "clsx": "^1.1.1",
+    "lodash": "^4.17.15",
+    "node-sass": "^4.14.1"
+  }
+}
