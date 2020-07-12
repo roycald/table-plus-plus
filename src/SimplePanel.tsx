@@ -1,5 +1,6 @@
 import { PanelProps } from '@grafana/data';
 import { stylesFactory, useTheme } from '@grafana/ui';
+import './style.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-enterprise';
@@ -100,6 +101,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     suppressDragLeaveHidesColumns: true,
     onCellValueChanged: onCellEditCallback,
   };
+
+  gridOptions.rowStyle = { background: '#2D3F42', color: '#ddd'};
+
   return (
     <div className={"ag-theme-alpine"} style={{ height: '100%', width: '100%' }} >
       <AgGridReact gridOptions={gridOptions}>

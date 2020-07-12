@@ -1,6 +1,12 @@
-@import "~ag-grid-community/src/styles/ag-grid.scss";
-@import "~ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin";
+.ag-theme-alpine .ag-header-cell {
+    background-color: #516062d0;
+    color: #ddd;
+}
 
-.ag-theme-alpine {
-    background-color: blue;
+.ag-header-viewport {
+    background-color: #516062d0;
+}
+
+.ag-body-viewport {
+    background-color: #ddd;
 }
