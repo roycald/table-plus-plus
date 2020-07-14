@@ -1,4 +1,3 @@
-import {PanelProps} from '@grafana/data';
 import {stylesFactory, useTheme} from '@grafana/ui';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -6,10 +5,7 @@ import 'ag-grid-enterprise';
 import {AgGridReact} from 'ag-grid-react';
 import _ from 'lodash';
 import React from 'react';
-import {SimpleOptions} from 'types';
 import './style.css';
-
-interface Props extends PanelProps<SimpleOptions> { }
 
 const getStyles = stylesFactory(() => {
   return {
@@ -21,7 +17,7 @@ const getStyles = stylesFactory(() => {
   };
 });
 
-export const SimplePanel: React.FC<Props> = (props: object) => {
+export const SimplePanel: React.FC = (props: object) => {
   const {data, fieldConfig} = props;
   const theme = useTheme();
   const styles = getStyles();
@@ -40,7 +36,7 @@ export const SimplePanel: React.FC<Props> = (props: object) => {
 
   // Dynamically defining the column defenitions
 
-  const shouldEnableFeature = (columnName: string, flag: string) => {
+  const shouldEnableEditing = (columnName: string, flag: string) => {
     const override = _.find(fieldConfig.overrides, (f) => f.matcher.options === columnName);
     if (!override) {
       return fieldConfig.defaults.custom[flag] === true;
@@ -53,8 +49,21 @@ export const SimplePanel: React.FC<Props> = (props: object) => {
     }
   };
 
+  const getEditingParams = (columnName: string) => {
+    const override = _.find(fieldConfig.overrides, (f) => f.matcher.options === columnName);
+    if (!override) {
+      return fieldConfig.defaults.custom['value_enums'].split(',');
+    }
+    console.log(override.properties);
+    const property = _.find(override.properties, (o) => o.id === `custom.value_enums`);
+    if (!property) {
+      return fieldConfig.defaults.custom['value_enums'].split(',');
+    } else {
+      return property.value.split(',');
+    }
+  };
+
   const onCellEditCallback = (params) => {
-    console.log(API_URL);
     fetch(API_URL, {
       method: 'put',
       headers: {'Content-type': 'application/json'},
@@ -73,14 +82,25 @@ export const SimplePanel: React.FC<Props> = (props: object) => {
   };
 
   const columnDefs = Object.keys(rowData).map((field) => {
+    const editable = shouldEnableEditing(field, 'editable')
     return {
       field,
       resizable: true,
       filter: true,
-      editable: shouldEnableFeature(field, 'editable'),
+      editable,
       sortable: true,
       menuTabs: ['filterMenuTab'],
       singleClickEdit: true,
+      cellEditorSelector: (params) => {
+        if (editable) {
+          return {component: 'agRichSelectCellEditor',
+            params: {
+              values: getEditingParams(field),
+            },
+          };
+        }
+        return {};
+      },
     };
   });
 
