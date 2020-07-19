@@ -5,8 +5,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-node_modules/
-
 # Runtime data
 pids
 *.pid
@@ -27,4 +25,3 @@ e2e-results/
 
 # Editors
 .idea
-

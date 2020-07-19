@@ -1,6 +1,6 @@
 import {stylesFactory, useTheme} from '@grafana/ui';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import 'ag-grid-enterprise/dist/styles/ag-theme-material.css';
 import 'ag-grid-enterprise';
 import {AgGridReact} from 'ag-grid-react';
 import _ from 'lodash';
@@ -9,11 +9,7 @@ import './style.css';
 
 const getStyles = stylesFactory(() => {
   return {
-    root: {
-      backgroundColor: 'red',
-      height: '100%',
-      width: '100%',
-    },
+    
   };
 });
 
@@ -33,6 +29,8 @@ export const SimplePanel: React.FC = (props: object) => {
   });
 
   const API_URL = fieldConfig.defaults.custom.update_api;
+  const ID_FIELD = fieldConfig.defaults.custom.id_field;
+  const VALUE_FIELD = fieldConfig.defaults.custom.value_field;
 
   // Dynamically defining the column defenitions
 
@@ -54,7 +52,6 @@ export const SimplePanel: React.FC = (props: object) => {
     if (!override) {
       return fieldConfig.defaults.custom['value_enums'].split(',');
     }
-    console.log(override.properties);
     const property = _.find(override.properties, (o) => o.id === `custom.value_enums`);
     if (!property) {
       return fieldConfig.defaults.custom['value_enums'].split(',');
@@ -64,12 +61,13 @@ export const SimplePanel: React.FC = (props: object) => {
   };
 
   const onCellEditCallback = (params) => {
+    console.log(params.data[ID_FIELD], params.data[VALUE_FIELD])
     fetch(API_URL, {
       method: 'put',
       headers: {'Content-type': 'application/json'},
       body: JSON.stringify({
-        id: params.data.id,
-        statusCode: params.data.statusCode,
+        id: params.data[ID_FIELD],
+        status_code: params.data[VALUE_FIELD],
       }),
     }).catch((e) => console.error(e));
   };
@@ -82,7 +80,7 @@ export const SimplePanel: React.FC = (props: object) => {
   };
 
   const columnDefs = Object.keys(rowData).map((field) => {
-    const editable = shouldEnableEditing(field, 'editable')
+    const editable = shouldEnableEditing(field, 'editable');
     return {
       field,
       resizable: true,
@@ -91,6 +89,9 @@ export const SimplePanel: React.FC = (props: object) => {
       sortable: true,
       menuTabs: ['filterMenuTab'],
       singleClickEdit: true,
+      enableRowGroup: true,
+      width: 200,
+      minWidth: 200,
       cellEditorSelector: (params) => {
         if (editable) {
           return {component: 'agRichSelectCellEditor',
@@ -124,9 +125,11 @@ export const SimplePanel: React.FC = (props: object) => {
     },
     suppressDragLeaveHidesColumns: true,
     onCellValueChanged: onCellEditCallback,
+    rowSelection: 'multiple',
+    rowMultiSelectWithClick: true,
+    autoGroupColumnDef: { minWidth: 200 },
+    rowGroupPanelShow: 'always',
   };
-
-  gridOptions.rowStyle = {background: '#2D3F42', color: '#ddd'};
 
   return (
     <div style={{
@@ -135,11 +138,9 @@ export const SimplePanel: React.FC = (props: object) => {
       display: 'flex',
       flexDirection: 'column'}}
     >
-      <div className={'ag-theme-alpine'}
+      <div className={'ag-theme-material'}
         style={{height: '100%', width: '100%', flexGrow: 1}} >
-        <AgGridReact gridOptions={gridOptions}>
-
-        </AgGridReact>
+        <AgGridReact gridOptions={gridOptions} />
       </div >
       <button className='pulse'
         onClick={onExcelExport}
