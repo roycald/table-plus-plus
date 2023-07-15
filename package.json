@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@grafana/data": "7.0.1",
-    "@grafana/toolkit": "7.0.1",
+    "@grafana/toolkit": "7.5.17",
     "@grafana/ui": "7.0.1",
     "emotion": "10.0.27",
     "webpack": "^4.43.0",
@@ -33,7 +33,7 @@
     "ag-grid-react": "^23.2.1",
     "clsx": "^1.1.1",
     "lodash": "^4.17.15",
-    "node-sass": "^4.14.1",
+    "node-sass": "^9.0.0",
     "sass-loader": "^9.0.2"
   }
 }
